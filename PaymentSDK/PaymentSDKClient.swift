@@ -277,9 +277,9 @@ import CommonCrypto
                 
                 let sessionId = self.kountHandler.generateSessionId()
                 var parameters = ["application_code" : apiCode,
-                                  "uid" : uid,
-                                  "email" : email,
-                                  "session_id": sessionId as Any] as [String : Any]
+                                  "uid" : uid ??  "",
+                                  "email" : email ??  "",
+                                  "session_id": sessionId ??  ""]
                 let authTimestamp = generateAuthTimestamp()
                 let authToken = generateAuthToken(parameters , authTimestamp: authTimestamp)
                 parameters["auth_timestamp"] = authTimestamp
@@ -342,7 +342,7 @@ import CommonCrypto
     internal static func listCardsV2(_ uid:String!, callback:@escaping (_ error:PaymentSDKError?, _ cardList:[PaymentCard]?) ->Void)
     {
         
-        let parameters = ["uid": uid] as [String:Any]
+        let parameters = ["uid": uid ?? ""] as [String:Any]
         let token = generateAuthTokenV2()
         self.request.makeRequestGetV2("/v2/transaction/list/", parameters: parameters as NSDictionary, token: token) { (error, statusCode, responseData) in
             
@@ -555,7 +555,7 @@ import CommonCrypto
             {
                 if statusCode == 200
                 {
-                    var dataR = (responseData as! [String:String])
+                    let dataR = (responseData as! [String:String])
                     if dataR["status"] == "success"
                     {
                         callback(nil,true)
@@ -682,7 +682,7 @@ import CommonCrypto
     static fileprivate func generateAuthTokenV2()-> String
     {
         let timestamp = self.generateAuthTimestamp()
-        var uniqueString = secretKey + timestamp
+        let uniqueString = secretKey + timestamp
         
         let dataIn = uniqueString.data(using: String.Encoding.utf8)!
         let res = NSMutableData(length: Int(CC_SHA256_DIGEST_LENGTH))
