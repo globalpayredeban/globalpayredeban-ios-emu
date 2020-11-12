@@ -279,7 +279,7 @@ import CommonCrypto
                 var parameters = ["application_code" : apiCode,
                                   "uid" : uid ??  "",
                                   "email" : email ??  "",
-                                  "session_id": sessionId ??  ""]
+                                  "session_id": sessionId ?? ""] as [String : Any]
                 let authTimestamp = generateAuthTimestamp()
                 let authToken = generateAuthToken(parameters , authTimestamp: authTimestamp)
                 parameters["auth_timestamp"] = authTimestamp
